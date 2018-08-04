@@ -15,4 +15,6 @@
     <depend>hardware_interface</depend>
     <depend>controller_manager</depend>
 
+    <test_depend>rosunit</test_depend>
+
 </package>
