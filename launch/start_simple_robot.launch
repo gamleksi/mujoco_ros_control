@@ -1,0 +1,27 @@
+<!--
+Copyright (c) Aalto  - All Rights Reserved
+Created on: 8/3/18
+    Author: Vladimir Petrik <vladimir.petrik@aalto.fi>
+   Details: load controllers and start mujoco_ros_control interface
+-->
+
+<launch>
+
+    <arg name="model" value="$(find mujoco_ros_control)/model/simple_robot.urdf"/>
+
+    <param name="robot_description" textfile="$(arg model)"/>
+
+    <arg name="controllers" default="joint_state_controller trajectory_controller"/>
+
+    <rosparam command="load" file="$(find mujoco_ros_control)/config/controllers.yaml" ns="mujoco_control"/>
+
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+          args="$(arg controllers)" ns="mujoco_control"/>
+
+    <node name="mujoco_control" type="mujoco_control" pkg="mujoco_ros_control" output="screen">
+        <param name="model" value="$(arg model)"/>
+    </node>
+
+    <node pkg="topic_tools" type="relay" name="relay_joint_state" args="joint_states /joint_states" ns="mujoco_control"/>
+
+</launch>

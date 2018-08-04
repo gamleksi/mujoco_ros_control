@@ -1,0 +1,20 @@
+# Publish all joint states
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+
+# Joint Trajectory Interface to MoveIt
+trajectory_controller:
+  type: effort_controllers/JointTrajectoryController
+
+  joints:
+    - ball_joint
+
+  gains: #PID controllers for individual joints
+    ball_joint: {p: 200,  d: 1, i: 1, i_clamp: 1}
+
+  constraints:
+    goal_time: 0.5
+  state_publish_rate:  25
+  action_monitor_rate: 30
+  stop_trajectory_duration: 0.01

@@ -1,0 +1,15 @@
+<!--
+Copyright (c) Aalto  - All Rights Reserved
+Created on: 8/3/18
+    Author: Vladimir Petrik <vladimir.petrik@aalto.fi>
+   Details: Launch rviz, robot state publisher (joint states -> tf) and rqt_trajectory control
+-->
+
+<launch>
+
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mujoco_ros_control)/config/rviz.rviz"/>
+
+    <node name="rqt_controller" type="rqt_joint_trajectory_controller" pkg="rqt_joint_trajectory_controller"/>
+
+</launch>

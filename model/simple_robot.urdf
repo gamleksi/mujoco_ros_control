@@ -1,0 +1,40 @@
+<robot name="simple_robot">
+    <mujoco>
+        <compiler meshdir="meshes/" balanceinertia="true"/>
+    </mujoco>
+
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <box size="1.0 1.0 0.05"/>
+            </geometry>
+        </visual>
+
+        <inertial>
+            <mass value="10"/>
+            <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+        </inertial>
+    </link>
+
+    <link name="ball">
+        <visual>
+            <geometry>
+                <sphere radius="0.05"/>
+            </geometry>
+        </visual>
+
+        <inertial>
+            <mass value="1"/>
+            <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.1" iyz="0.0" izz="0.1"/>
+        </inertial>
+    </link>
+
+    <joint name="ball_joint" type="prismatic">
+        <axis xyz="0 0 1"/>
+        <limit effort="1000.0" lower="0.0" upper="1.0" velocity="0.5"/>
+        <origin rpy="0 0 0" xyz="0 0 0.075"/>
+        <parent link="base_link"/>
+        <child link="ball"/>
+    </joint>
+
+</robot>
