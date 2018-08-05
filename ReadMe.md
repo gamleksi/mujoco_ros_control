@@ -43,9 +43,9 @@ roslaunch mujoco_ros_control rviz.launch
 ```
 
 ### Simulation of Kuka lwr/lbr robot provided in separate repository:
-```
-github... TBD
-``` 
+
+<https://version.aalto.fi/gitlab/robotic_manipulation/kuka_mujoco>
+ 
 
 ### Resources
 - https://version.aalto.fi/gitlab/robotic_manipulation/mujoco_ros_control
