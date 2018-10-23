@@ -16,7 +16,9 @@ std::unique_ptr<ros::Time> start_time;
 
 void cb_controller(const mjModel *m, mjData *d) {
     hw->read(*d);
-    cm->update(*start_time + ros::Duration(d->time), ros::Duration(m->opt.timestep));
+    const float duration = d->time;
+
+    cm->update(*start_time + ros::Duration(duration), ros::Duration(m->opt.timestep));
     hw->write(*d);
 }
 
