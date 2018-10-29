@@ -23,8 +23,8 @@ std::unique_ptr<ros::Time> start_time;
 
 
 // MuJoCo model and data
-mjModel* m = 0;
-mjData* d = 0;
+mjModel *m = 0;
+mjData *d = 0;
 
 // MuJoCo visualization
 mjvCamera cam;                      // abstract camera
@@ -40,7 +40,7 @@ void cb_controller(const mjModel *m, mjData *d) {
     hw->write(*d);
 }
 
-void initVisual() { 
+void initVisual() {
     // initialize visualization data structures
     mjv_defaultCamera(&cam);
     mjv_defaultOption(&opt);
@@ -60,28 +60,28 @@ void initVisual() {
 
 void initGl() {
 
-    if( !glfwInit() )
+    if (!glfwInit())
         mju_error("Could not initialize GLFW");
 
     // create invisible window, single-buffered
     glfwWindowHint(GLFW_VISIBLE, 0);
     glfwWindowHint(GLFW_DOUBLEBUFFER, 0); // GLFW_FALSE);
-    GLFWwindow* window = glfwCreateWindow(800, 800, "Invisible window", NULL, NULL);
-    if( !window )
+    GLFWwindow *window = glfwCreateWindow(800, 800, "Invisible window", NULL, NULL);
+    if (!window)
         mju_error("Could not create GLFW window");
     // make context current
     glfwMakeContextCurrent(window);
 }
 
 
-void render(mjrRect& viewport) {
-        std::cout << "Render" << std::endl;
-        // update abstract scene
-        mjv_updateScene(m, d, &opt, NULL, &cam, mjCAT_ALL, &scn);
-        std::cout << "Render1" << std::endl;
-        // render scene in offscreen buffer
-        mjr_render(viewport, &scn, &con);
-        std::cout << "Render3" << std::endl;
+void render(mjrRect &viewport) {
+    std::cout << "Render" << std::endl;
+    // update abstract scene
+    mjv_updateScene(m, d, &opt, NULL, &cam, mjCAT_ALL, &scn);
+    std::cout << "Render1" << std::endl;
+    // render scene in offscreen buffer
+    mjr_render(viewport, &scn, &con);
+    std::cout << "Render3" << std::endl;
 }
 
 int main(int argc, char **argv) {
@@ -89,7 +89,7 @@ int main(int argc, char **argv) {
     ros::init(argc, argv, "mujoco_control");
     ros::NodeHandle node("~");
 
-    ros::AsyncSpinner spinner(1);
+    ros::AsyncSpinner spinner(2);
     spinner.start();
 
     const auto default_model_path = ros::package::getPath("mujoco_ros_control") + "/model/simple_robot.urdf";
@@ -140,11 +140,11 @@ int main(int argc, char **argv) {
 
     // Render
     mjr_setBuffer(mjFB_OFFSCREEN, &con);
-    if( con.currentBuffer!=mjFB_OFFSCREEN )
+    if (con.currentBuffer != mjFB_OFFSCREEN)
         printf("Warning: offscreen rendering not supported, using default/window framebuffer\n");
 
     // get size of active renderbuffer
-    mjrRect viewport =  mjr_maxViewport(&con);
+    mjrRect viewport = mjr_maxViewport(&con);
     int W = viewport.width;
     int H = viewport.height;
 
@@ -159,7 +159,7 @@ int main(int argc, char **argv) {
     //free visualization storage
     mjv_freeScene(&scn);
     mjr_freeContext(&con);
-    
+
     // free MuJoCo model and data, deactivate
     mj_deleteModel(m);
     mj_deleteData(d);

@@ -2,14 +2,14 @@
 find_path(glfw3_INCLUDE_DIR
         NAMES glfw3.h
         PATHS
-        $ENV{HOME}/.mujoco/mjpro150/include
+        $ENV{HOME}/.mujoco/mjpro200/include
         NO_DEFAULT_PATH
         )
 
 find_library(glfw3_LIBRARIES
         NAMES libglfw.so.3
         PATHS
-        $ENV{HOME}/.mujoco/mjpro150/bin
+        $ENV{HOME}/.mujoco/mjpro200/bin
         NO_DEFAULT_PATH
         )
 

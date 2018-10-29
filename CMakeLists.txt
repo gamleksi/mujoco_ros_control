@@ -9,13 +9,15 @@ find_package(catkin REQUIRED roscpp roslib hardware_interface controller_manager
 find_package(mujoco REQUIRED)
 find_package(glfw3 REQUIRED)
 
+find_package(OpenGL REQUIRED)
+
 catkin_package()
 
 include_directories(include ${catkin_INCLUDE_DIRS} ${mujoco_INCLUDE_DIR} ${glfw3_INCLUDE_DIR})
 
 add_executable(mujoco_control src/mujoco_control.cpp src/RobotHWMujoco.cpp)
 
-target_link_libraries(mujoco_control ${mujoco_LIBRARIES} ${glfw3_LIBRARIES} ${nvidia_LIBRARIES} ${libglew_LIBRARIES} ${catkin_LIBRARIES})
+target_link_libraries(mujoco_control ${mujoco_LIBRARIES} ${glfw3_LIBRARIES} ${libglew_LIBRARIES} ${catkin_LIBRARIES} ${OPENGL_LIBRARIES})
 
 add_dependencies(mujoco_control ${catkin_EXPORTED_TARGETS})
 
