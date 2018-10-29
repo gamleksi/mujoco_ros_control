@@ -6,8 +6,8 @@
 
 #include "stdio.h"
 #include <mutex>
-#include <GLFW/glfw3.h>
 #include <mujoco.h>
+#include <glfw3.h>
 
 #include <ros/ros.h>
 #include <ros/package.h>
@@ -16,6 +16,7 @@
 
 #include <mujoco_ros_control/RobotHWMujoco.h>
 #include <controller_manager/controller_manager.h>
+
 
 std::unique_ptr<RobotHWMujoco> hw;
 std::unique_ptr<controller_manager::ControllerManager> cm;
@@ -27,10 +28,14 @@ mjModel *m = 0;
 mjData *d = 0;
 
 // MuJoCo visualization
-mjvCamera cam;                      // abstract camera
-mjvOption opt;                      // visualization options
-mjvScene scn;                       // abstract scene
-mjrContext con;                     // custom GPU context
+mjvScene scn;
+mjvCamera cam;
+mjvOption opt;
+mjrContext con;
+//mjvCamera cam;                      // abstract camera
+//mjvScene scn;                       // abstract scene
+//mjvOption opt;                      // visualization options
+//mjrContext con;                     // custom GPU context
 
 void cb_controller(const mjModel *m, mjData *d) {
     hw->read(*d);
@@ -59,18 +64,19 @@ void initVisual() {
 }
 
 void initGl() {
-
     if (!glfwInit())
         mju_error("Could not initialize GLFW");
 
     // create invisible window, single-buffered
     glfwWindowHint(GLFW_VISIBLE, 0);
-    glfwWindowHint(GLFW_DOUBLEBUFFER, 0); // GLFW_FALSE);
+    glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_FALSE);
     GLFWwindow *window = glfwCreateWindow(800, 800, "Invisible window", NULL, NULL);
     if (!window)
         mju_error("Could not create GLFW window");
+
     // make context current
     glfwMakeContextCurrent(window);
+
 }
 
 
@@ -102,6 +108,7 @@ int main(int argc, char **argv) {
         return -1;
     }
 
+    initGl();
     char error[1000] = "";
     m = mj_loadXML(model_path.c_str(), nullptr, error, 1000);
 
@@ -118,7 +125,7 @@ int main(int argc, char **argv) {
     }
 
     // run one computation to initialize all fields
-    initGl();
+//    initGl();
     mj_step(m, d);
     initVisual();
 
@@ -140,13 +147,14 @@ int main(int argc, char **argv) {
 
     // Render
     mjr_setBuffer(mjFB_OFFSCREEN, &con);
-    if (con.currentBuffer != mjFB_OFFSCREEN)
-        printf("Warning: offscreen rendering not supported, using default/window framebuffer\n");
+    if (con.currentBuffer != mjFB_OFFSCREEN) {
+        ROS_WARN_STREAM("Warning: offscreen rendering not supported, using default/window framebuffer");
+    }
 
     // get size of active renderbuffer
     mjrRect viewport = mjr_maxViewport(&con);
-    int W = viewport.width;
-    int H = viewport.height;
+//    int W = viewport.width;
+//    int H = viewport.height;
 
     std::mutex mutex;
     const auto render_timer = node.createTimer(timestep * 180, [&mutex, &viewport](const ros::TimerEvent &e) {
@@ -156,14 +164,19 @@ int main(int argc, char **argv) {
 
     ros::waitForShutdown();
 
-    //free visualization storage
-    mjv_freeScene(&scn);
-    mjr_freeContext(&con);
-
-    // free MuJoCo model and data, deactivate
-    mj_deleteModel(m);
     mj_deleteData(d);
+    mj_deleteModel(m);
+    mjr_freeContext(&con);
+    mjv_freeScene(&scn);
     mj_deactivate();
+//    //free visualization storage
+//    mjv_freeScene(&scn);
+//    mjr_freeContext(&con);
+//
+//    // free MuJoCo model and data, deactivate
+//    mj_deleteModel(m);
+//    mj_deleteData(d);
+//    mj_deactivate();
 
     return 0;
 }
