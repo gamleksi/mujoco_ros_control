@@ -1,14 +1,18 @@
 
 find_path(mujoco_INCLUDE_DIR
         NAMES mujoco.h
-        PATHS $ENV{HOME}/.mujoco/mjpro200/include
-        NO_DEFAULT_PATH
+        PATHS 
+	$ENV{HOME}/.mujoco/mjpro200/include
+        $ENV{HOME}/.mujoco/mujoco200/include
+	NO_DEFAULT_PATH
         )
 
 find_library(mujoco_LIBRARIES
         NAMES libmujoco200.so
-        PATHS $ENV{HOME}/.mujoco/mjpro200/bin 
-        NO_DEFAULT_PATH
+        PATHS
+	$ENV{HOME}/.mujoco/mjpro200/bin 
+        $ENV{HOME}/.mujoco/mujoco200/bin
+	NO_DEFAULT_PATH
         )
 
 #find_library(nvidia_LIBRARIES
@@ -19,7 +23,9 @@ find_library(mujoco_LIBRARIES
 
 find_library(libglew_LIBRARIES
         NAMES libglew.so 
-        PATHS $ENV{HOME}/.mujoco/mjpro200/bin
+        PATHS
+	$ENV{HOME}/.mujoco/mjpro200/bin
+	$ENV{HOME}/.mujoco/mujoco200/bin
         NO_DEFAULT_PATH
         )
 
